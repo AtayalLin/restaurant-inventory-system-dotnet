@@ -13,6 +13,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // 配方仍在使用的食材不可刪除（預設是 CASCADE，會把配方一起刪掉，風險太高）
+        modelBuilder.Entity<RecipeItem>()
+            .HasOne(r => r.Ingredient)
+            .WithMany()
+            .HasForeignKey(r => r.IngredientId)
+            .OnDelete(DeleteBehavior.Restrict);
         // 食材名稱不可重複
         modelBuilder.Entity<Ingredient>().HasIndex(i => i.Name).IsUnique();
 

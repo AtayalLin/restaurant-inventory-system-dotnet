@@ -209,7 +209,7 @@ namespace InventoryApi.Migrations
                     b.HasOne("InventoryApi.Models.Ingredient", "Ingredient")
                         .WithMany()
                         .HasForeignKey("IngredientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("InventoryApi.Models.Product", null)
