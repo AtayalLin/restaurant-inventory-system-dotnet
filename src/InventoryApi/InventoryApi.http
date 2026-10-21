@@ -31,3 +31,30 @@ Content-Type: application/json
 { "name": "高麗菜", "unit": "g", "stock": 4700, "safetyStock": 1000, "minOrderQty": 3000, "rowVersion": "AAAAAAAAB9U=" }
 ### 7. 刪除被配方使用的食材（應回 409）
 DELETE {{host}}/api/ingredients/1
+
+### 8. 出餐 2 份高麗菜炒肉飯（應回 200）
+POST {{host}}/api/products/1/serve
+Content-Type: application/json
+
+{ "quantity": 2 }
+
+### 9. 確認庫存已扣除：高麗菜 4700→4400、豬肉片 3000→2800、白飯 8000→7500
+GET {{host}}/api/ingredients
+
+### 10. 出餐 100 份（應回 422，並列出 3 項不足）
+POST {{host}}/api/products/1/serve
+Content-Type: application/json
+
+{ "quantity": 100 }
+
+### 11. 份數為 0（應回 400）
+POST {{host}}/api/products/1/serve
+Content-Type: application/json
+
+{ "quantity": 0 }
+
+### 12. 不存在的商品（應回 404）
+POST {{host}}/api/products/999/serve
+Content-Type: application/json
+
+{ "quantity": 1 }
