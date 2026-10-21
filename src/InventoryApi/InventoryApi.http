@@ -1,6 +1,33 @@
-@InventoryApi_HostAddress = http://localhost:5245
+@host = http://localhost:5245
 
-GET {{InventoryApi_HostAddress}}/weatherforecast/
-Accept: application/json
+### 1. 列出全部食材（應看到 3 筆種子資料）
+GET {{host}}/api/ingredients
 
-###
+### 2. 查詢單一食材
+GET {{host}}/api/ingredients/1
+
+### 3. 新增食材（應回 201）
+POST {{host}}/api/ingredients
+Content-Type: application/json
+
+{ "name": "雞蛋", "unit": "顆", "stock": 100, "safetyStock": 30, "minOrderQty": 60 }
+
+### 4. 驗證失敗：名稱空白、庫存負數（應回 400，並列出錯誤欄位）
+POST {{host}}/api/ingredients
+Content-Type: application/json
+
+{ "name": "", "unit": "顆", "stock": -5, "safetyStock": 0, "minOrderQty": 0 }
+
+### 5. 名稱重複（應回 409）
+POST {{host}}/api/ingredients
+Content-Type: application/json
+
+{ "name": "高麗菜", "unit": "g", "stock": 10, "safetyStock": 0, "minOrderQty": 0 }
+
+### 6. 修改食材：先執行第 2 個請求，把回傳的 rowVersion 貼到下面
+PUT {{host}}/api/ingredients/1
+Content-Type: application/json
+
+{ "name": "高麗菜", "unit": "g", "stock": 4700, "safetyStock": 1000, "minOrderQty": 3000, "rowVersion": "AAAAAAAAB9U=" }
+### 7. 刪除被配方使用的食材（應回 409）
+DELETE {{host}}/api/ingredients/1
