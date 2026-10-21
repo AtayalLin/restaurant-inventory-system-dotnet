@@ -1,0 +1,15 @@
+# 本機開發用的 MS SQL Server；密碼從同目錄的 .env 讀取，不寫死在這裡
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: inventory-mssql
+    environment:
+      ACCEPT_EULA: "Y"                      # 同意 SQL Server 授權條款（必填）
+      MSSQL_SA_PASSWORD: ${DB_PASSWORD}     # sa 管理員密碼，來自 .env
+    ports:
+      - "1433:1433"                         # 本機 1433 埠 → 容器 1433 埠
+    volumes:
+      - mssql-data:/var/opt/mssql           # 資料存在 volume，容器刪除後資料仍保留
+
+volumes:
+  mssql-data:
